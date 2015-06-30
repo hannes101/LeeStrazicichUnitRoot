@@ -43,20 +43,60 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   #Percentage to eliminate endpoints in the lag calculation
   pi <- 0.1
   #Critical Values for the one break test
-  model.crash.cval <- c(-4,239, -3.566, -3.211)
+  model.one.crash.cval <- c(-4,239, -3.566, -3.211)
   
-  model.break.cval <- matrix(c(.1 , -5.11, -4.5, -4.21,
+  model.one.break.cval <- matrix(c(.1 , -5.11, -4.5, -4.21,
                                .2 , -5.07, -4.47, -4.20,
                                .3 , -5.15, -4.45, -4.18,
                                .4 , -5.05, -4.50, -4.18,
                                .5 , -5.11, -4.51, -4.17), nrow = 5, ncol = 4, byrow = TRUE)
-  colnames(model.break.cval) <- c("lambda","1%","5%","10%")
+  colnames(model.one.break.cval) <- c("lambda","1%","5%","10%")
 #   All critical values were derived in samples of size T = 100. Critical values
 #   in Model C (intercept and trend break) depend (somewhat) on the location of the
 #   break (λ = T_B /T) and are symmetric around λ and (1-λ). Model C critical values
 #   at additional break locations can be interpolated.
+#
+#   Critical values for the endogenous two break test  
+#   Model A - "crash" model  
+#   invariant to the location of the crash
+ model.two.crash.cval <- matrix(c("LM_thau", -4.545, -3.842, -3.504,
+                                  "LM_rho", -35.726, -26.894, -22.892), nrow = 2, ncol = 4, byrow = TRUE ) 
+
+ colnames(model.two.crash.cval) <-  c("Statistic","1%","5%","10%")
   
-  
+
+# Model C (i) - "break" model, breaks in the data generating process
+# Model C (i) - "break" model invariant to the location of the crash
+ 
+ model.two.break.dgp.cval <- matrix(c("LM_thau", -5.823, -5.286, -4.989,
+                                      "LM_rho", -52.550, -45.531, -41.663), nrow = 2, ncol = 4, byrow = TRUE ) 
+ 
+ 
+ # Model C (ii) - "break" model, breaks are not considered in the data generating process
+ # Model C (ii) - "break" model depends on the location of the crash
+ ## highest level of list is the location of the second breakpoint - so the share inside 
+ ## the matrix refers to the first breakpoint
+ model.two.break.thau.cval <- list("0.4" = list( matrix(c("LM_thau - 0.2", -6.16, -5.59, -5.27)
+                                                                  , nrow = 1, ncol = 4, byrow = TRUE )),
+                                  "0.6" =   list(matrix(c("LM_thau - 0.2", -6.41, -5.74, -5.32,
+                                                                    "LM_thau - 0.4", -6.45, -5.67, -5.31)
+                                                                  , nrow = 2, ncol = 4, byrow = TRUE )),
+                                  "0.8" = list( matrix(c( "LM_thau - 0.2", -6.33, -5.71, -5.33,
+                                                          "LM_thau - 0.4", -6.42, -5.65, -5.32,
+                                                          "LM_thau - 0.6", -6.32, -5.73, -5.32)
+                                                                  , nrow = 3, ncol = 4, byrow = TRUE )
+ ))
+ model.two.break.rho.cval <- list("0.4" = list( matrix(c("LM_rho - 0.2", -55.4, -47.9, -44.0)
+                                                       , nrow = 1, ncol = 4, byrow = TRUE )),
+                                  "0.6" =   list(matrix(c("LM_rho - 0.2", -58.6, -49.9, -44.4,
+                                                          "LM_rho - 0.4", -59.3, -49.0, -44.3)
+                                                        , nrow = 2, ncol = 4, byrow = TRUE )),
+                                  "0.8" = list( matrix(c( "LM_rho - 0.2", -57.6, -49.6, -44.6,
+                                                          "LM_rho - 0.4", -58.8, -48.7, -44.5,
+                                                          "LM_rho - 0.6", -57.4, -49.8, -44.4)
+                                                       , nrow = 3, ncol = 4, byrow = TRUE )
+                                  ))
+ 
   #Number of observations to eliminate in relation to the sample length
   pinobs <- round(pi*n)
   
@@ -344,9 +384,11 @@ if(breaks == 1)
 
   print(mint)
   print(paste("First possible structural break at position:", mybestbreak1))
+  print(paste("The location of the first break - lambda_1:", round(mybestbreak1/n, digits = 1),", with the number of total observations:", n))  
+  
   if(breaks == 2){
-    print(paste("Second possible structural break at position:", mybestbreak2))
-    
+    print(paste("Second possible structural brgiteak at position:", mybestbreak2))
+    print(paste("The location of the second break - lambda_2:", round(mybestbreak2/n, digits = 1),", with the number of total observations:", n))  
   }
   if(method == "Fixed"){
     print(paste("Number of lags used:",lags))
@@ -358,10 +400,4 @@ if(breaks == 1)
   return(break.reg)
   
 }#End of ur.ls function
-
 myLS_test <- ur.ls(y=y , model = "crash", breaks = 1, lags = 1, method = "Fixed",pi = 0.1 )
-
-
-
-
-
