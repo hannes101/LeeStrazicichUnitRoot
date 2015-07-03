@@ -62,7 +62,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   #   Critical values for the endogenous two break test  
   #   Model A - "crash" model  
   #   invariant to the location of the crash
-  model.two.crash.cval <- matrix(c("LM_thau", -4.545, -3.842, -3.504,
+  model.two.crash.cval <- matrix(c("LM_tau", -4.545, -3.842, -3.504,
                                    "LM_rho", -35.726, -26.894, -22.892), nrow = 2, ncol = 4, byrow = TRUE ) 
   
   colnames(model.two.crash.cval) <-  c("Statistic","1%","5%","10%")
@@ -71,7 +71,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   # Model C (i) - "break" model, breaks in the data generating process
   # Model C (i) - "break" model invariant to the location of the crash
   
-  model.two.break.dgp.cval <- matrix(c("LM_thau", -5.823, -5.286, -4.989,
+  model.two.break.dgp.cval <- matrix(c("LM_tau", -5.823, -5.286, -4.989,
                                        "LM_rho", -52.550, -45.531, -41.663), nrow = 2, ncol = 4, byrow = TRUE ) 
   
   
@@ -79,13 +79,13 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   # Model C (ii) - "break" model depends on the location of the crash
   ## highest level of list is the location of the second breakpoint - so the share inside 
   ## the matrix refers to the first breakpoint
-  model.two.break.thau.cval <-  matrix(c( -6.16, -5.59, -5.27, -6.41, -5.74, -5.32, -6.33, -5.71, -5.33,
+  model.two.break.tau.cval <-  matrix(c( -6.16, -5.59, -5.27, -6.41, -5.74, -5.32, -6.33, -5.71, -5.33,
                                           NA    ,   NA,  NA  , -6.45, -5.67, -5.31, -6.42, -5.65, -5.32,
                                           NA    ,   NA,  NA  , NA   , NA   , NA   , -6.32, -5.73, -5.32)
                                        , nrow = 3, ncol = 9, byrow = TRUE )
   
-  rownames(model.two.break.thau.cval) <- c("Break 1 - 0.2", "Break 1 - 0.4", "Break 1 - 0.6")
-  colnames(model.two.break.thau.cval) <- c("Break 2 - 0.4 - 1%", "Break 2 - 0.4 - 5%", "Break 2 - 0.4 - 10%",
+  rownames(model.two.break.tau.cval) <- c("Break 1 - 0.2", "Break 1 - 0.4", "Break 1 - 0.6")
+  colnames(model.two.break.tau.cval) <- c("Break 2 - 0.4 - 1%", "Break 2 - 0.4 - 5%", "Break 2 - 0.4 - 10%",
                                            "Break 2 - 0.6 - 1%", "Break 2 - 0.6 - 5%", "Break 2 - 0.6 - 10%",
                                            "Break 2 - 0.8 - 1%", "Break 2 - 0.8 - 5%", "Break 2 - 0.8 - 10%")
   
@@ -395,7 +395,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
     print(paste("The location of the second break - lambda_2:", round(mybestbreak2/n, digits = 1),", with the number of total observations:", n))  
     
     cat("Critical values:\n")
-    print(model.two.break.thau.cval)
+    print(model.two.break.tau.cval)
     
   }else if(breaks == 1){
     if(model == "crash"){
