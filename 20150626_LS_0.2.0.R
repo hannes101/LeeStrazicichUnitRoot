@@ -231,7 +231,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       return(roll.reg)
       
     } else if(model =="break"){
-      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.exclude(cbind(Dt.diff[,])), y=na.exclude(y.diff)))))
+      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.exclude(cbind(DTt.diff[,])), y=na.exclude(y.diff)))))
       S.tilde.diff <-  diff(S.tilde)
       
       
