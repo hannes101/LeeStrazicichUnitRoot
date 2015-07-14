@@ -1,4 +1,4 @@
-ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, method = c("GTOS","Fixed"), pi = 0.1){
+ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, method = c("GTOS","Fixed"), pn = 0.1){
   #Starttime
   starttime <- Sys.time()
   
@@ -6,12 +6,12 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   if (any(is.na(y))) 
     stop("\nNAs in y.\n")
   
-  if(pi >= 1 || pi <= 0){
-    stop("\n pi has to be between 0 and 1.")
+  if(pn >= 1 || pn <= 0){
+    stop("\n pn has to be between 0 and 1.")
   }
   if(method == "Fixed" && is.null(lags) == TRUE){
     stop("\n If fixed lag length should be estimated, the number 
-         \n of lags to be included should be defined explicitely.")
+          \n of lags to be included should be defined explicitely.")
   }
   
   #Add lagmatrix function
@@ -42,7 +42,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   method <- match.arg(method)
   breaks <- as.integer(breaks)
   #Percentage to eliminate endpoints in the lag calculation
-  pi <- 0.1
+  pn <- 0.1
   #Critical Values for the one break test
   model.one.crash.cval <- matrix(c(-4.239, -3.566, -3.211)
                                  , nrow = 1, ncol = 3, byrow = TRUE)
@@ -54,60 +54,60 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
                                    .4 , -5.05, -4.50, -4.18,
                                    .5 , -5.11, -4.51, -4.17), nrow = 5, ncol = 4, byrow = TRUE)
   colnames(model.one.break.cval) <- c("lambda","1%","5%","10%")
-  #   All critical values were derived in samples of size T = 100. Critical values
-  #   in Model C (intercept and trend break) depend (somewhat) on the location of the
-  #   break (λ = T_B /T) and are symmetric around λ and (1-λ). Model C critical values
-  #   at additional break locations can be interpolated.
-  #
-  #   Critical values for the endogenous two break test  
-  #   Model A - "crash" model  
-  #   invariant to the location of the crash
-  model.two.crash.cval <- matrix(c("LM_tau", -4.545, -3.842, -3.504,
-                                   "LM_rho", -35.726, -26.894, -22.892), nrow = 2, ncol = 4, byrow = TRUE ) 
+#   All critical values were derived in samples of size T = 100. Critical values
+#   in Model C (intercept and trend break) depend (somewhat) on the location of the
+#   break (λ = T_B /T) and are symmetric around λ and (1-λ). Model C critical values
+#   at additional break locations can be interpolated.
+#
+#   Critical values for the endogenous two break test  
+#   Model A - "crash" model  
+#   invariant to the location of the crash
+ model.two.crash.cval <- matrix(c("LM_tau", -4.545, -3.842, -3.504,
+                                  "LM_rho", -35.726, -26.894, -22.892), nrow = 2, ncol = 4, byrow = TRUE ) 
+
+ colnames(model.two.crash.cval) <-  c("Statistic","1%","5%","10%")
   
-  colnames(model.two.crash.cval) <-  c("Statistic","1%","5%","10%")
-  
-  
-  # Model C (i) - "break" model, breaks in the data generating process
-  # Model C (i) - "break" model invariant to the location of the crash
-  
-  model.two.break.dgp.cval <- matrix(c("LM_tau", -5.823, -5.286, -4.989,
-                                       "LM_rho", -52.550, -45.531, -41.663), nrow = 2, ncol = 4, byrow = TRUE ) 
-  
-  
-  # Model C (ii) - "break" model, breaks are not considered in the data generating process
-  # Model C (ii) - "break" model depends on the location of the crash
-  ## highest level of list is the location of the second breakpoint - so the share inside 
-  ## the matrix refers to the first breakpoint
-  model.two.break.tau.cval <-  matrix(c( -6.16, -5.59, -5.27, -6.41, -5.74, -5.32, -6.33, -5.71, -5.33,
-                                          NA    ,   NA,  NA  , -6.45, -5.67, -5.31, -6.42, -5.65, -5.32,
-                                          NA    ,   NA,  NA  , NA   , NA   , NA   , -6.32, -5.73, -5.32)
-                                       , nrow = 3, ncol = 9, byrow = TRUE )
-  
-  rownames(model.two.break.tau.cval) <- c("Break 1 - 0.2", "Break 1 - 0.4", "Break 1 - 0.6")
-  colnames(model.two.break.tau.cval) <- c("Break 2 - 0.4 - 1%", "Break 2 - 0.4 - 5%", "Break 2 - 0.4 - 10%",
-                                           "Break 2 - 0.6 - 1%", "Break 2 - 0.6 - 5%", "Break 2 - 0.6 - 10%",
-                                           "Break 2 - 0.8 - 1%", "Break 2 - 0.8 - 5%", "Break 2 - 0.8 - 10%")
-  
-  
-  model.two.break.rho.cval <-  matrix(c( -55.4 , -47.9, -44.0, -58.6, -49.9, -44.4, -57.6, -49.6, -44.6,
-                                         NA    ,    NA,  NA  ,-59.3, -49.0, -44.3, -58.8, -48.7, -44.5,
-                                         NA    ,    NA,  NA  , NA  , NA   , NA    ,-57.4, -49.8, -44.4)
+
+# Model C (i) - "break" model, breaks in the data generating process
+# Model C (i) - "break" model invariant to the location of the crash
+ 
+ model.two.break.dgp.cval <- matrix(c("LM_tau", -5.823, -5.286, -4.989,
+                                      "LM_rho", -52.550, -45.531, -41.663), nrow = 2, ncol = 4, byrow = TRUE ) 
+ 
+ 
+ # Model C (ii) - "break" model, breaks are not considered in the data generating process
+ # Model C (ii) - "break" model depends on the location of the crash
+ ## highest level of list is the location of the second breakpoint - so the share inside 
+ ## the matrix refers to the first breakpoint
+ model.two.break.tau.cval <-  matrix(c( -6.16, -5.59, -5.27, -6.41, -5.74, -5.32, -6.33, -5.71, -5.33,
+                                         NA    ,   NA,  NA  , -6.45, -5.67, -5.31, -6.42, -5.65, -5.32,
+                                         NA    ,   NA,  NA  , NA   , NA   , NA   , -6.32, -5.73, -5.32)
                                       , nrow = 3, ncol = 9, byrow = TRUE )
-  
-  
-  rownames(model.two.break.rho.cval) <- c("Break 1 - 0.2", "Break 1 - 0.4", "Break 1 - 0.6")
-  colnames(model.two.break.rho.cval) <- c("Break 2 - 0.4 - 1%", "Break 2 - 0.4 - 5%", "Break 2 - 0.4 - 10%",
+ 
+ rownames(model.two.break.tau.cval) <- c("Break 1 - 0.2", "Break 1 - 0.4", "Break 1 - 0.6")
+ colnames(model.two.break.tau.cval) <- c("Break 2 - 0.4 - 1%", "Break 2 - 0.4 - 5%", "Break 2 - 0.4 - 10%",
                                           "Break 2 - 0.6 - 1%", "Break 2 - 0.6 - 5%", "Break 2 - 0.6 - 10%",
                                           "Break 2 - 0.8 - 1%", "Break 2 - 0.8 - 5%", "Break 2 - 0.8 - 10%")
+ 
+ 
+ model.two.break.rho.cval <-  matrix(c( -55.4 , -47.9, -44.0, -58.6, -49.9, -44.4, -57.6, -49.6, -44.6,
+                                        NA    ,    NA,  NA  ,-59.3, -49.0, -44.3, -58.8, -48.7, -44.5,
+                                        NA    ,    NA,  NA  , NA  , NA   , NA    ,-57.4, -49.8, -44.4)
+                                     , nrow = 3, ncol = 9, byrow = TRUE )
+ 
+ 
+ rownames(model.two.break.rho.cval) <- c("Break 1 - 0.2", "Break 1 - 0.4", "Break 1 - 0.6")
+ colnames(model.two.break.rho.cval) <- c("Break 2 - 0.4 - 1%", "Break 2 - 0.4 - 5%", "Break 2 - 0.4 - 10%",
+                                         "Break 2 - 0.6 - 1%", "Break 2 - 0.6 - 5%", "Break 2 - 0.6 - 10%",
+                                         "Break 2 - 0.8 - 1%", "Break 2 - 0.8 - 5%", "Break 2 - 0.8 - 10%")
   #Number of observations to eliminate in relation to the sample length
-  pinobs <- round(pi*n)
+  pnnobs <- round(pn*n)
   
   
   #Define the start values
   startl <- 0
-  myBreakStart <- startl + 1 + pinobs
-  myBreakEnd <- n - pinobs
+  myBreakStart <- startl + 1 + pnnobs
+  myBreakEnd <- n - pnnobs
   
   #Calculate Dy
   y.diff <- diffmatrix(y, max.diff = 1, max.lag = 1)
@@ -121,7 +121,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   gap <- 2 + as.numeric(model == "break")
   
   
-  myBreaks <- matrix(NA, nrow = n - 2 * pinobs, ncol =  breaks)
+  myBreaks <- matrix(NA, nrow = n - 2 * pnnobs, ncol =  breaks)
   if(breaks == 1){
     
     myBreaks [,1] <- myBreakStart:myBreakEnd
@@ -153,7 +153,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       #               Define optimal lags to include to remove autocorrelation from the residuals
       #               select p.value of the highest lag order and check if significant
       test.coef <- coef(summary(lm(y.diff ~ 0 + lagmatrix(S.tilde,1)[,-1] + datmat[,-1][, 1:(qlag + 1)]  + Dummy.diff)))
-      
+
       #                print(test.coef)
       #                print(test.coef[qlag + 1 , 4])
       #               print(c("Number of qlag",qlag)) 
@@ -179,7 +179,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
     DTt.diff <- diffmatrix(DTt, max.diff = 1, max.lag = 1)
     
     S.tilde <- 0
-    S.tilde <- c(0, cumsum(residuals((summary(lm(y.diff ~ 0 + Dt.diff[,]))))))
+    S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.exclude(cbind(Dt.diff[,])), y=na.exclude(y.diff)))))
     S.tilde.diff <-  diffmatrix(S.tilde,max.diff = 1, max.lag = 1)
     #       Define optimal lags to include to remove autocorrelation
     #       max lag length pmax to include is based on Schwert (1989) 
@@ -216,22 +216,22 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
     
     S.tilde <- NA
     
-    
+
     
     if(model == "crash"){
-      S.tilde <- c(0, cumsum(residuals((summary(lm(y.diff ~ 0 + Dt.diff))))))
+      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.exclude(cbind(Dt.diff[,])), y=na.exclude(y.diff)))))
       S.tilde.diff <-  diff(S.tilde,1)
       
       #Add lag of S.tilde.diff to control for autocorrelation in the residuals
       roll.reg <- summary(lm(y.diff ~ 0 + lagmatrix(S.tilde, 1)[,-1] + datmat[,2:(slag+2)]  + Dt.diff))
       
       
-      #print(roll.reg)
-      
+     #print(roll.reg)
+     
       return(roll.reg)
       
     } else if(model =="break"){
-      S.tilde <- c( 0,cumsum(residuals((summary(lm(y.diff ~ 0 +  DTt.diff))))))
+      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.exclude(cbind(Dt.diff[,])), y=na.exclude(y.diff)))))
       S.tilde.diff <-  diff(S.tilde)
       
       
@@ -239,7 +239,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       roll.reg <- summary(lm(y.diff ~ 0 + lagmatrix(S.tilde,1)[,-1] + datmat[,2:(slag+2)] + DTt.diff))
       
       #Return Value
-      # print(roll.reg)
+    # print(roll.reg)
       #print("break")
       return(roll.reg)
       
@@ -249,23 +249,23 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
     return(roll.reg)
     
   }
+
+# Start of the actual function call
   
-  # Start of the actual function call
-  
-  if(breaks == 1)
-  {
-    # Function to calculate the rolling t-stat
-    # One Break Case
-    for(myBreak1 in myBreaks[,1]){
-      #Dummies for one break case
-      Dt1 <-  as.matrix(cbind(trend, trend >= (myBreak1 + 1)))
-      
-      #       Dummy with break in intercept and in trend
-      DTt1 <- as.matrix(cbind(Dt1, c(rep(0, myBreak1), 1:(n - myBreak1))))
-      colnames(Dt1) <- c("Trend","D")
-      colnames(DTt1) <- c("Trend","D","DTt")
-      #print(paste("Break1: ",myBreak1, sep = ""))
-      
+if(breaks == 1)
+{
+# Function to calculate the rolling t-stat
+# One Break Case
+  for(myBreak1 in myBreaks[,1]){
+    #Dummies for one break case
+    Dt1 <-  as.matrix(cbind(trend, trend >= (myBreak1 + 1)))
+    
+    #       Dummy with break in intercept and in trend
+    DTt1 <- as.matrix(cbind(Dt1, c(rep(0, myBreak1), 1:(n - myBreak1))))
+    colnames(Dt1) <- c("Trend","D")
+    colnames(DTt1) <- c("Trend","D","DTt")
+    #print(paste("Break1: ",myBreak1, sep = ""))
+
       #Combine all Dummies into one big matrix to make it easier to include in the regressions
       
       Dt <- cbind(Dt1)
@@ -292,67 +292,67 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
         mybestbreak1 <- myBreak1
       }
       
-      
-    }#End of first for loop
+   
+  }#End of first for loop
+  
+} else if(breaks == 2) {
+  
+  
+## Two Break Case
+  #First for loop for the two break case
+  for(myBreak1 in myBreaks[,1]){
+    #Dummies for one break case
+    Dt1 <-  as.matrix(cbind(trend, trend >= (myBreak1 + 1)))
     
-  } else if(breaks == 2) {
+    #       Dummy with break in intercept and in trend
+    DTt1 <- as.matrix(cbind(Dt1, c(rep(0, myBreak1), 1:(n - myBreak1))))
+    colnames(Dt1) <- c("Trend","D")
+    colnames(DTt1) <- c("Trend","D","DTt")
+    #print(paste("Break1: ",myBreak1, sep = ""))
     
-    
-    ## Two Break Case
-    #First for loop for the two break case
-    for(myBreak1 in myBreaks[,1]){
-      #Dummies for one break case
-      Dt1 <-  as.matrix(cbind(trend, trend >= (myBreak1 + 1)))
+    #Second for loop for the two break case
+    for(myBreak2 in (myBreak1+gap):myBreakEnd){
       
-      #       Dummy with break in intercept and in trend
-      DTt1 <- as.matrix(cbind(Dt1, c(rep(0, myBreak1), 1:(n - myBreak1))))
-      colnames(Dt1) <- c("Trend","D")
-      colnames(DTt1) <- c("Trend","D","DTt")
-      #print(paste("Break1: ",myBreak1, sep = ""))
+      #Dummies for two break case
+      Dt2 <-  as.matrix(trend >= (myBreak2 + 1))
+      DTt2 <- as.matrix(cbind(Dt2, c(rep(0, myBreak2), 1:(n - myBreak2))))
+      colnames(Dt2) <- c("D2")
+      colnames(DTt2) <- c("D2","DTt2")
+      #print(paste("Break2: ",myBreak2, sep = ""))
       
-      #Second for loop for the two break case
-      for(myBreak2 in (myBreak1+gap):myBreakEnd){
-        
-        #Dummies for two break case
-        Dt2 <-  as.matrix(trend >= (myBreak2 + 1))
-        DTt2 <- as.matrix(cbind(Dt2, c(rep(0, myBreak2), 1:(n - myBreak2))))
-        colnames(Dt2) <- c("D2")
-        colnames(DTt2) <- c("D2","DTt2")
-        #print(paste("Break2: ",myBreak2, sep = ""))
-        
-        #Combine all Dummies into one big matrix to make it easier to include in the regressions
-        
-        Dt <- cbind(Dt1, Dt2)
-        DTt <- cbind(DTt1, DTt2)
-        
-        result.reg <- myLSfunc(Dt,DTt,y.diff)
-        
-        #Extract the t-statistic and if it is smaller than all previous 
-        #t-statistics replace it and store the values of all break variables
-        #Extract residuals and coefficients and store them in a list
-        
-        
-        #matrix to hold all the tstats
-        tstat.matrix[myBreak1, myBreak2] <- coef(result.reg)[1,3]
-        tstat <- coef(result.reg)[1,3]
-        
-        #print(tstat)
-        if(tstat < mint){
-          mint <- tstat
-          mybestbreak1 <- myBreak1
-          mybestbreak2 <- myBreak2
-        }
-        
-        #Break the second for loop,
-        if(myBreak2 >= myBreakEnd){
-          break
-        }
+      #Combine all Dummies into one big matrix to make it easier to include in the regressions
+      
+      Dt <- cbind(Dt1, Dt2)
+      DTt <- cbind(DTt1, DTt2)
+      
+      result.reg <- myLSfunc(Dt,DTt,y.diff)
+      
+      #Extract the t-statistic and if it is smaller than all previous 
+      #t-statistics replace it and store the values of all break variables
+      #Extract residuals and coefficients and store them in a list
+      
+      
+      #matrix to hold all the tstats
+      tstat.matrix[myBreak1, myBreak2] <- coef(result.reg)[1,3]
+      tstat <- coef(result.reg)[1,3]
+      
+      #print(tstat)
+      if(tstat < mint){
+              mint <- tstat
+              mybestbreak1 <- myBreak1
+              mybestbreak2 <- myBreak2
+                  }
+     
+      #Break the second for loop,
+      if(myBreak2 >= myBreakEnd){
+        break
+      }
       }#End of second for loop
     }#End of first for loop
-  } else if(breaks > 2){
-    
-    print("Currently more than two possible structural breaks are not implemented.")
-  }
+} else if(breaks > 2){
+  
+  print("Currently more than two possible structural breaks are not implemented.")
+}
   
   #Estimate regression results, based on the determined breaks and the selected lag 
   # to obtain all necessary information
@@ -364,26 +364,26 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   colnames(DTt1) <- c("Trend","D","DTt")
   #print(paste("Break1: ",myBreak1, sep = ""))
   
-  if(breaks == 2){
-    #Dummies for two break case
-    Dt2 <-  as.matrix(trend >= (mybestbreak2 + 1))
-    DTt2 <- as.matrix(cbind(Dt2, c(rep(0, mybestbreak2), 1:(n - mybestbreak2))))
-    colnames(Dt2) <- c("D2")
-    colnames(DTt2) <- c("D2","DTt2")
-    #print(paste("Break2: ",myBreak2, sep = ""))
-    
-    #Combine all Dummies into one big matrix to make it easier to include in the regressions
-    
-    Dt <- cbind(Dt1, Dt2)
-    DTt <- cbind(DTt1, DTt2)
-  } else if (breaks == 1){
-    Dt <- Dt1
-    DTt <- DTt1
-    
-  }
+    if(breaks == 2){
+        #Dummies for two break case
+        Dt2 <-  as.matrix(trend >= (mybestbreak2 + 1))
+        DTt2 <- as.matrix(cbind(Dt2, c(rep(0, mybestbreak2), 1:(n - mybestbreak2))))
+        colnames(Dt2) <- c("D2")
+        colnames(DTt2) <- c("D2","DTt2")
+        #print(paste("Break2: ",myBreak2, sep = ""))
+        
+        #Combine all Dummies into one big matrix to make it easier to include in the regressions
+        
+        Dt <- cbind(Dt1, Dt2)
+        DTt <- cbind(DTt1, DTt2)
+    } else if (breaks == 1){
+      Dt <- Dt1
+      DTt <- DTt1
+      
+    }
   
-  
-  break.reg <- myLSfunc(Dt,DTt,y.diff) 
+    
+    break.reg <- myLSfunc(Dt,DTt,y.diff) 
   
   endtime <- Sys.time()
   myruntime <- difftime(endtime,starttime, units = "auto")
@@ -394,20 +394,22 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
     print(paste("Second possible structural break at position:", mybestbreak2))
     print(paste("The location of the second break - lambda_2:", round(mybestbreak2/n, digits = 1),", with the number of total observations:", n))  
     
+
+# Output Critical Values    
     cat("Critical values:\n")
     print(model.two.break.tau.cval)
     
   }else if(breaks == 1){
-    if(model == "crash"){
-      cat("Critical values - Crash model:\n")
-      print(model.one.crash.cval)
-    } else if(model == "break"){
-      cat("Critical values - Break model:\n")
-      print(model.one.break.cval)
-    }
-    
+                if(model == "crash"){
+                 cat("Critical values - Crash model:\n")
+                print(model.one.crash.cval)
+                                    } else if(model == "break"){
+                                                cat("Critical values - Break model:\n")
+                                                print(model.one.break.cval)
+                                              }
+                                              
   }
-  
+    
   if(method == "Fixed"){
     print(paste("Number of lags used:",lags))
   } else if(method == "GTOS"){
@@ -419,6 +421,6 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   #print(break.reg)
   return(break.reg)
   
-  }#End of ur.ls function
+}#End of ur.ls function
 
 myLS_test <- ur.ls(y=y , model = "crash", breaks = 1, lags = 1, method = "Fixed",pi = 0.1 )
