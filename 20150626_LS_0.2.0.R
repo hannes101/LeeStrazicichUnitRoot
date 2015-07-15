@@ -161,7 +161,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       
       df <- length(test.reg.data[,1]) - test.reg.lm.$qr$rank
       sigma2 <- sum((test.reg.data[,1] - test.reg.lm.$fitted.values)^2)/df
-      varbeta <- sigma2 * chol2inv(qr.R(test.reg.lm.$qr), size = qlag + 3)
+      varbeta <- sigma2 * chol2inv(qr.R(test.reg.lm.$qr), size = ncol(test.reg.data) - 2))
       SE <- sqrt(diag(varbeta))
       tstat <- na.omit(coef(test.reg.lm.))/SE
       pvalue <- 2* pt(abs(tstat), df = df, lower.tail =  FALSE)
