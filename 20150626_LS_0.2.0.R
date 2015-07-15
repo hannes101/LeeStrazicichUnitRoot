@@ -152,12 +152,25 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       
       #               Define optimal lags to include to remove autocorrelation from the residuals
       #               select p.value of the highest lag order and check if significant
-      test.coef <- coef(summary(lm(y.diff ~ 0 + lagmatrix(S.tilde,1)[,-1] + datmat[,-1][, 1:(qlag + 1)]  + Dummy.diff)))
-
+      #test.coef <- coef(summary(lm(y.diff ~ 0 + lagmatrix(S.tilde,1)[,-1] + datmat[,-1][, 1:(qlag + 1)]  + Dummy.diff)))
+      
+      #lm.fit implementation
+      test.reg.data <- na.omit(cbind(y.diff,lagmatrix(S.tilde,1)[,-1], datmat[,-1][, 1:(qlag + 1)], Dummy.diff))
+      
+      test.reg.lm. <-(lm.fit(x = test.reg.data[,-1], y = test.reg.data[, 1]))
+      
+      df <- length(test.reg.data[,1]) - test.reg.lm.$qr$rank
+      sigma2 <- sum((test.reg.data[,1] - test.reg.lm.$fitted.values)^2)/df
+      varbeta <- sigma2 * chol2inv(qr.R(test.reg.lm.$qr), size = qlag + 3)
+      SE <- sqrt(diag(varbeta))
+      tstat <- na.omit(coef(test.reg.lm.))/SE
+      pvalue <- 2* pt(abs(tstat), df = df, lower.tail =  FALSE)
+      
       #                print(test.coef)
-      #                print(test.coef[qlag + 1 , 4])
+      #                print(paste("lm result:",qlag,test.coef[qlag + 1 , 4]))
+      #                print(paste("lm.fit:",qlag,pvalue[qlag+1]))
       #               print(c("Number of qlag",qlag)) 
-      if(test.coef[qlag +1 , 4] <= 0.1){
+      if(pvalue[qlag+1] <= 0.1){
         slag <- qlag
         #                  print("break")
         break
