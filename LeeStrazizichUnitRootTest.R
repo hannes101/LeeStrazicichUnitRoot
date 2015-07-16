@@ -140,7 +140,6 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
   
   #Function to analyze the optimal lags to remove autocorrelation from the residuals
   #Lag selection with general to specific procedure based on Ng,Perron (1995)
-  #ToDo make it possible, that zero lags are included
   myLagSelection <- function(y.diff, S.tilde, datmat, pmax, Dummy.diff){
     n <- length(y.diff)
     
