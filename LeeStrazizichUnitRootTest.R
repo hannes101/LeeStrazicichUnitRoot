@@ -231,7 +231,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
     
     if(model == "crash"){
       S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff)))))
-      S.tilde.diff <-  diff(S.tilde,1)
+      S.tilde.diff <-  diffmatrix(S.tilde, max.diff = 1, max.lag = 1))
       
       #Add lag of S.tilde.diff to control for autocorrelation in the residuals
       if(est.function == "results"){
@@ -268,7 +268,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       
     } else if(model =="break"){
       S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(DTt.diff[,])), y=na.omit(y.diff)))))
-      S.tilde.diff <-  diff(S.tilde)
+      S.tilde.diff <-  diffmatrix(S.tilde, max.diff = 1, max.lag = 1))
       
       
       #Add lag of S.tilde.diff to control for autocorrelation in the residuals
