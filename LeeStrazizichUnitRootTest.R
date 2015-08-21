@@ -376,7 +376,7 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
       #print(paste("Break1: ",myBreak1, sep = ""))
       
       #Second for loop for the two break case
-      for(myBreak2 in (myBreak1+gap):myBreakEnd){
+      for(myBreak2 in  myBreaks[which(myBreaks[,2] < myBreakEnd & myBreaks[,2] >= myBreak1 + gap),2]){
         
         #Dummies for two break case
         Dt2 <-  as.matrix(trend >= (myBreak2 + 1))
@@ -408,10 +408,6 @@ ur.ls <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, metho
           mybestbreak2 <- myBreak2
         }
         
-        #Break the second for loop,
-        if(myBreak2 >= myBreakEnd){
-          break
-        }
       }#End of second for loop
     }#End of first for loop
   } else if(breaks > 2){
