@@ -330,6 +330,8 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   {
     # Function to calculate the rolling t-stat
     # One Break Case
+    # foreach implementation returns a list of the tstat and the corresponding break dates
+    # 
     tstat.result.matrix <-  foreach(myBreak1 = myBreaks[,1], .combine = 'rbind') %dopar%{
       #Dummies for one break case
       Dt1 <-  as.matrix(cbind(trend, trend >= (myBreak1 + 1)))
@@ -348,26 +350,18 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
       result.reg[[myBreak1]] <- myLSfunc(Dt, DTt, y.diff, est.function = c("estimation"))
       
       
-      
-      #Extract the t-statistic and if it is smaller than all previous 
-      #t-statistics replace it and store the values of all break variables
-      #Extract residuals and coefficients and store them in a list
-      
-      #result.matrix[[myBreak1]] <- result.reg
-      #result.reg.resid[[myBreak1]] <- residuals(result.reg)
-      #result.reg.coef[[myBreak1]] <- coefficients(result.reg)
-      
-      
+      # return the t.statistic for the considered break dates 
       tstat <- result.reg[[myBreak1]][1,3]
       tstat.result <- list(tstat,myBreak1)
-      #  tstat.result.matrix[myBreak1, 1] <- result.reg[[myBreak1]][1,3]
       
     }#End of first for loop
   } else if(breaks == 2) {
     
     
     ## Two Break Case
-    #First for loop for the two break case
+    # Nested foreach loop to implement the parallelization for the two break case
+    # Returns a complete list with tstat and the corresponding break dates
+    # These returned matrix is then searched for the minimum tstat
     tstat.result.matrix <- foreach(myBreak1 = myBreaks[,1], .combine = 'rbind', .errorhandling = 'remove') %:%
       foreach(myBreak2 = myBreaks[which(myBreaks[,2] < myBreakEnd & myBreaks[,2] >= myBreak1 + gap),2]
               ,.combine = 'rbind', .errorhandling = 'remove') %dopar%{
@@ -394,18 +388,8 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
                 
                 result.reg <- myLSfunc(Dt, DTt, y.diff, est.function = c("estimation"))
                 
-                #Extract the t-statistic and if it is smaller than all previous 
-                #t-statistics replace it and store the values of all break variables
-                #Extract residuals and coefficients and store them in a list
                 
-                
-                #matrix to hold all the tstats
-                #tstat.result.matrix[myBreak1, 1] <- result.reg[1,3]
-                
-                
-                #tstat.result.matrix[myBreak1, myBreak2] <- result.reg[1,3]
-                
-                
+                # return the t.statistic for the considered break dates 
                 tstat <- result.reg[1,3]
                 tstat.result <- list(tstat,myBreak1,myBreak2) 
                 
@@ -416,15 +400,13 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
     
     print("Currently more than two possible structural breaks are not implemented.")
   }
-  
-  
   #Find index of minimum in the result matrix
   #Determine the breakpoints according to the minimum
-  
   mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
   if(breaks== 2){
     mybestbreak2 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][3])
   }
+  #Find minimum tstat
   mint <- tstat.result.matrix[which.min(tstat.result.matrix),][1]
   #Estimate regression results, based on the determined breaks and the selected lag 
   # to obtain all necessary information
