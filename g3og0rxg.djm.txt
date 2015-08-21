@@ -1,0 +1,39 @@
+﻿reword b2b4cf6 Initial upload of the Lee Strazicich function
+pick 0fc9e37 add function call as example
+pick a366e6b Added critical values and lambda is printed out.
+pick fb1a37c Added additional comments in README
+pick 5d02ec9 Added runtime and critical value output
+pick d322aff fixed typo in readme
+pick 3468537 fixed typo of tau
+pick cd8ed56 Added citations
+pick 41551de Added lm.fit() to S.tilde generation
+pick caf8e77 Fixed typo in new lm.fit() call
+pick 3c3cceb Implementation of lm.fit() for the General-to-Specific lag selection
+pick 5e220ab Fix static definition of the size of the qr matrix
+pick 6ab2fb3 Updated the whole function to use lm.fit() and only use lm() to calculate the results for the break case
+pick b5f68e5 file renaming
+pick 98beaeb Replaced diff with the correct diffmatrix
+pick b66d2fb Fixed wrong closing bracket
+pick 9a81b45 Upload parallelized version of Lee Strazizich test
+pick b68baa3 Update to the readme - parallelization
+pick 7fc6141 Cleaned up comments
+pick 878f41e Better iteration second break loop
+
+# Rebase 4cfde85..878f41e onto 4cfde85
+#
+# Commands:
+#  p, pick = use commit
+#  r, reword = use commit, but edit the commit message
+#  e, edit = use commit, but stop for amending
+#  s, squash = use commit, but meld into previous commit
+#  f, fixup = like "squash", but discard this commit's log message
+#  x, exec = run command (the rest of the line) using shell
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+
