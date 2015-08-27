@@ -12,6 +12,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   #Check sanity of the function call
   if (any(is.na(y))) 
     stop("\nNAs in y.\n")
+  y <- as.vector(y)
   
   if(pn >= 1 || pn <= 0){
     stop("\n pn has to be between 0 and 1.")
