@@ -475,9 +475,13 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   print(myruntime)
   }
   # Create complete list with all the information and not only print it
-  results.return <- list(mint, mybestbreak1, mybestbreak2, myruntime)
-  names(results.return) <- c("t-stat", "First break", "Second break", "Runtime")
-  
+  if(breaks == 2){
+    results.return <- list(mint, mybestbreak1, mybestbreak2, myruntime)
+    names(results.return) <- c("t-stat", "First break", "Second break", "Runtime")
+  } else if(breaks == 1){
+    results.return <- list(mint, mybestbreak1, myruntime)
+    names(results.return) <- c("t-stat", "First break", "Runtime")
+  }
   return(list(results.return, break.reg))
   }#End of ur.ls function
 
