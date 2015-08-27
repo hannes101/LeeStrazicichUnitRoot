@@ -488,4 +488,4 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   }#End of ur.ls function
 
 
-ur.ls.bootstrap(y=dt.myVariables$EEXPeak , model = "break", breaks = 2, lags = 5, method = "Fixed",pn = 0.1, critval = "bootstrap")
+myLS_test <- ur.ls.bootstrap(y=y , model = "crash", breaks = 1, lags = 5, method = "Fixed",pn = 0.1, critval = "bootstrap", print.results = "print")
