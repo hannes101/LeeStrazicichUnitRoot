@@ -402,9 +402,11 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   }
   #Find index of minimum in the result matrix
   #Determine the breakpoints according to the minimum
-  mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
   if(breaks== 2){
+    mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
     mybestbreak2 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][3])
+  } else if(breaks == 1){
+    mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
   }
   #Find minimum tstat
   mint <- tstat.result.matrix[which.min(tstat.result.matrix),][1]
