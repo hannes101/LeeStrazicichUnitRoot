@@ -199,7 +199,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
     DTt.diff <- diffmatrix(DTt, max.diff = 1, max.lag = 1)
     
     S.tilde <- 0
-    S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff)))))
+    S.tilde <- c(0, cumsum(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff))$residuals))
     S.tilde.diff <-  diffmatrix(S.tilde,max.diff = 1, max.lag = 1)
     #       Define optimal lags to include to remove autocorrelation
     #       max lag length pmax to include is based on Schwert (1989) 
@@ -239,7 +239,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
     
     
     if(model == "crash"){
-      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff)))))
+      S.tilde <- c(0, cumsum(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff))$residuals))
       S.tilde.diff <-  diffmatrix(S.tilde,max.diff = 1, max.lag = 1)
       
       #Add lag of S.tilde.diff to control for autocorrelation in the residuals
@@ -276,7 +276,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
       }
       
     } else if(model =="break"){
-      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(DTt.diff[,])), y=na.omit(y.diff)))))
+      S.tilde <- c(0, cumsum(lm.fit(x = na.omit(cbind(DTt.diff[,])), y=na.omit(y.diff))$residuals))
       S.tilde.diff <-  diff(S.tilde)
       
       
