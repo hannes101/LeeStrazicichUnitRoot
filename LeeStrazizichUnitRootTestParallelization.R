@@ -50,7 +50,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   method <- match.arg(method)
   breaks <- as.integer(breaks)
   #Percentage to eliminate endpoints in the lag calculation
-  pn <- 0.1
+  pn <- pn
   #Critical Values for the one break test
   model.one.crash.cval <- matrix(c(-4.239, -3.566, -3.211)
                                  , nrow = 1, ncol = 3, byrow = TRUE)
