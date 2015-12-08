@@ -1,9 +1,3 @@
-library(foreach)
-library(doSNOW)
-library(parallel)
-#Define number of cores to use. By default the maximum available number minus one core is used
-cl <- makeCluster(max(1, detectCores() - 1))
-registerDoSNOW(cl)
 #Additional option for the calculation of the critical value is available, but not used at the moment
 ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = NULL, method = c("GTOS","Fixed"), pn = 0.1, critval = c("bootstrap","theoretical"), print.results = c("print", "silent")){
   #Starttime
@@ -12,6 +6,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   #Check sanity of the function call
   if (any(is.na(y))) 
     stop("\nNAs in y.\n")
+  y <- as.vector(y)
   
   if(pn >= 1 || pn <= 0){
     stop("\n pn has to be between 0 and 1.")
@@ -49,7 +44,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   method <- match.arg(method)
   breaks <- as.integer(breaks)
   #Percentage to eliminate endpoints in the lag calculation
-  pn <- 0.1
+  pn <- pn
   #Critical Values for the one break test
   model.one.crash.cval <- matrix(c(-4.239, -3.566, -3.211)
                                  , nrow = 1, ncol = 3, byrow = TRUE)
@@ -199,7 +194,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
     DTt.diff <- diffmatrix(DTt, max.diff = 1, max.lag = 1)
     
     S.tilde <- 0
-    S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff)))))
+    S.tilde <- c(0, cumsum(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff))$residuals))
     S.tilde.diff <-  diffmatrix(S.tilde,max.diff = 1, max.lag = 1)
     #       Define optimal lags to include to remove autocorrelation
     #       max lag length pmax to include is based on Schwert (1989) 
@@ -239,7 +234,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
     
     
     if(model == "crash"){
-      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff)))))
+      S.tilde <- c(0, cumsum(lm.fit(x = na.omit(cbind(Dt.diff[,])), y=na.omit(y.diff))$residuals))
       S.tilde.diff <-  diffmatrix(S.tilde,max.diff = 1, max.lag = 1)
       
       #Add lag of S.tilde.diff to control for autocorrelation in the residuals
@@ -276,7 +271,7 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
       }
       
     } else if(model =="break"){
-      S.tilde <- c(0, cumsum(residuals(lm.fit(x = na.omit(cbind(DTt.diff[,])), y=na.omit(y.diff)))))
+      S.tilde <- c(0, cumsum(lm.fit(x = na.omit(cbind(DTt.diff[,])), y=na.omit(y.diff))$residuals))
       S.tilde.diff <-  diff(S.tilde)
       
       
@@ -402,9 +397,11 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   }
   #Find index of minimum in the result matrix
   #Determine the breakpoints according to the minimum
-  mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
   if(breaks== 2){
+    mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
     mybestbreak2 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][3])
+  } else if(breaks == 1){
+    mybestbreak1 <- as.integer(tstat.result.matrix[which.min(tstat.result.matrix),][2])
   }
   #Find minimum tstat
   mint <- tstat.result.matrix[which.min(tstat.result.matrix),][1]
@@ -475,11 +472,13 @@ ur.ls.bootstrap <- function(y, model = c("crash", "break"), breaks = 1, lags = N
   print(myruntime)
   }
   # Create complete list with all the information and not only print it
-  results.return <- list(mint, mybestbreak1, mybestbreak2, myruntime)
-  names(results.return) <- c("t-stat", "First break", "Second break", "Runtime")
-  
+  if(breaks == 2){
+    results.return <- list(mint, mybestbreak1, mybestbreak2, myruntime)
+    names(results.return) <- c("t-stat", "First break", "Second break", "Runtime")
+  } else if(breaks == 1){
+    results.return <- list(mint, mybestbreak1, myruntime)
+    names(results.return) <- c("t-stat", "First break", "Runtime")
+  }
   return(list(results.return, break.reg))
   }#End of ur.ls function
 
-
-ur.ls.bootstrap(y=dt.myVariables$EEXPeak , model = "break", breaks = 2, lags = 5, method = "Fixed",pn = 0.1, critval = "bootstrap")
