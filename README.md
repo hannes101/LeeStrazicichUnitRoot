@@ -6,6 +6,7 @@ I also now implemented an updated version of my code, which allows to run the mo
 
 Usage:
 1. The R files LeeStrazizichUnitRootTest.R and LeeStrazizichUnitRootTestParallelization.R contain the functions, which need to be sourced in the R environment.
+
 2. The R file LeeStrazizichApplication.R then just gives two quick examples on how to use the two functions and get the results.
 
 
