@@ -5,9 +5,10 @@ The code is based on the original code by Junsoo Lee and Mark C. Strazicich addi
 I also now implemented an updated version of my code, which allows to run the most computationally demanding functions in parallel. This allows a really fast calculation of the results, compared with the first implementation in R.
 
 Usage:
-1. The R files LeeStrazizichUnitRootTest.R and LeeStrazizichUnitRootTestParallelization.R contain the functions, which need to be sourced in the R environment.
 
-2. The R file LeeStrazizichApplication.R then just gives two quick examples on how to use the two functions and get the results.
+1) The R files LeeStrazizichUnitRootTest.R and LeeStrazizichUnitRootTestParallelization.R contain the functions, which need to be sourced in the R environment.
+
+2) The R file LeeStrazizichApplication.R then just gives two quick examples on how to use the two functions and get the results.
 
 
 I would like to thank the authors, who made the code available to me.
