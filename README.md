@@ -3,7 +3,7 @@ R code to perform the Lee Strazicich Unit Root test by Lee, Strazicich (2003, 20
 the endogenous determination of one or two structural breaks.
 The code is based on the original code by Junsoo Lee and Mark C. Strazicich additionally I took the available RATS code [1] by Tom Doan and replicated my results with this procedure.
 I also now implemented an updated version of my code, which allows to run the most computationally demanding functions in parallel. This allows a really fast calculation of the results, compared with the first implementation in R. Additionally I published the procedures to calculate bootstrapped results for the test statistic and the break dates. This is mostly based on the paper by Chou (2007).
-For an example of the usage and the presentation of this code, please be referred to the conference paper version, where I make use of this test. [2]
+For an example of the usage and the presentation of this test, based on the code, please be referred to the conference paper version. [2]
 
 Usage:
 
