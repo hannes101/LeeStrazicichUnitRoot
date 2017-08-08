@@ -24,6 +24,6 @@ Lee, Junsoo and Mark C. Strazicich (2004). "Minimum LM Unit Root Test with One S
 Chou, Win Lin (2007). "Performance of LM-type unit root tests with trend break: A bootstrap approach", Economics Letters, Volume 94, Issue 1, January 2007, Pages 76-82, ISSN 0165-1765, http://dx.doi.org/10.1016/j.econlet.2006.08.004.
 (http://www.sciencedirect.com/science/article/pii/S0165176506002722)
 
-[2] Lips, Johannes (2017). Do They Still Matter? – Impact of Fossil Fuels on Electricity Prices in the Light of Increased Renewable Generation. Journal of Time Series Econometrics, 0(0), Retrieved 13 Jun. 2017, from doi:10.1515/jtse-2016-0018
+[2] Lips, J. (2017). Do They Still Matter? – Impact of Fossil Fuels on Electricity Prices in the Light of Increased Renewable Generation. Journal of Time Series Econometrics, 9(2), pp. -. Retrieved 8 Aug. 2017 from https://doi.org/10.1515/jtse-2016-0018
 
 [3] Lips, Johannes (2016). "Do They Still Matter? - Impact of Fossil Fuels on Electricity Prices in the Light of Increased Renewable Generation." In . Beiträge Zur Jahrestagung Des Vereins Für Socialpolitik 2016: Demographischer Wandel - Session: Auctions and Prices. Kiel und Hamburg: ZBW - Deutsche Zentralbibliothek für Wirtschaftswissenschaften, Leibniz-Informationszentrum Wirtschaft. http://hdl.handle.net/10419/145601.
